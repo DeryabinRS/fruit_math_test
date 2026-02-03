@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сложение и вычитание с фруктами | 5-6 лет</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Marker Felt', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 10px;
+        }
+
+        .app-container {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 650px;
+            min-height: 88vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Декоративные элементы */
+        .decoration {
+            position: absolute;
+            opacity: 0.25;
+            z-index: 0;
+        }
+        .star { color: #ffd700; font-size: 40px; }
+        .circle { color: #ff6b6b; font-size: 30px; }
+        .square { color: #4ecdc4; font-size: 35px; }
+
+        /* Хедер */
+        .header {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            padding: 14px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .header h1 span { font-size: 2.5rem; }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 12px;
+        }
+        .star-icon {
+            font-size: 24px;
+            color: #ffd700;
+            transition: transform 0.3s;
+        }
+        .star-icon.filled {
+            transform: scale(1.2);
+            animation: twinkle 1s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Контент */
+        .content {
+            padding: 8px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .title {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 5px;
+            min-height: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Уравнение с фруктами */
+        .equation-container {
+            width: 100%;
+            background: #f9f7ff;
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .equation {
+            font-size: 2.8rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            min-height: 70px;
+        }
+        .equation .number {
+            color: #667eea;
+            min-width: 60px;
+            text-align: center;
+        }
+        .equation .operator {
+            color: #ff6b6b;
+            font-size: 3.2rem;
+            min-width: 50px;
+            text-align: center;
+        }
+        .equation .minus {
+            color: #4ecdc4;
+            font-size: 3.2rem;
+        }
+        .equation .equals {
+            color: #4ecdc4;
+            min-width: 40px;
+            text-align: center;
+        }
+        .equation .question {
+            color: #ff9a9e;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Фрукты */
+        .fruits-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 25px;
+            margin: 8px 0;
+            min-height: 100px;
+            flex-wrap: wrap;
+        }
+        .fruits-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .fruits-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            max-width: 200px;
+            min-height: 30px;
+        }
+        .fruit {
+            font-size: 28px;
+            transition: transform 0.3s, opacity 0.3s;
+            user-select: none;
+        }
+        .fruit.removed {
+            opacity: 0.2;
+            transform: scale(0.6) translateY(15px);
+        }
+        .fruit-count {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 3px 10px;
+            border-radius: 15px;
+            min-width: 40px;
+        }
+
+        /* Кнопки ответов */
+        .answer-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 8px 0;
+            width: 100%;
+        }
+        .answer-btn {
+            padding: 18px 5px;
+            font-size: 1.7rem;
+            width: calc(33% - 10px);
+            min-width: 80px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .answer-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        .answer-btn.correct {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            animation: pulse 0.6s;
+            transform: scale(1.1);
+        }
+        .answer-btn.wrong {
+            background: linear-gradient(to right, #ff6b6b, #ee5a24);
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* Обратная связь */
+        .feedback {
+            padding: 18px;
+            border-radius: 20px;
+            font-size: 1.45rem;
+            font-weight: bold;
+            display: none;
+            line-height: 1.3;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .feedback.success {
+            background: linear-gradient(to right, #00c853, #64dd17);
+            color: white;
+            display: block;
+            animation: bounceIn 0.6s;
+        }
+        .feedback.error {
+            background: linear-gradient(to right, #ff1744, #ff5252);
+            color: white;
+            display: block;
+            animation: bounceIn 0.6s;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Кнопка "Дальше" */
+        .next-btn {
+            background: linear-gradient(to right, #00c853, #64dd17);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(0, 150, 0, 0.4);
+            width: 90%;
+            max-width: 300px;
+        }
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 9px 20px rgba(0, 150, 0, 0.5);
+        }
+        .next-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Прогресс */
+        .progress {
+            font-size: 1.25rem;
+            color: #555;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* Анимация появления фруктов */
+        @keyframes fruitDrop {
+            0% { transform: translateY(-30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .fruit.animate {
+            animation: fruitDrop 0.4s forwards;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .header h1 span { font-size: 2.1rem; }
+            .equation {
+                font-size: 2.3rem;
+                gap: 8px;
+            }
+            .equation .operator, .equation .minus {
+                font-size: 2.6rem;
+            }
+            .fruit {
+                font-size: 24px;
+            }
+            .answer-btn {
+                font-size: 1.5rem;
+                padding: 16px 5px;
+                width: calc(50% - 10px);
+            }
+            .fruits-container {
+                gap: 15px;
+            }
+            .next-btn {
+                font-size: 1.4rem;
+                padding: 16px 30px;
+            }
+            .feedback {
+                font-size: 1.3rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Декорации -->
+        <div class="decoration star" style="top: 20px; left: 30px;">★</div>
+        <div class="decoration circle" style="top: 100px; right: 40px;">●</div>
+        <div class="decoration square" style="bottom: 100px; left: 40px;">■</div>
+        <div class="decoration star" style="bottom: 40px; right: 50px;">★</div>
+
+        <!-- Хедер -->
+        <div class="header">
+            <h1><span>🍎</span> Фруктовая математика</h1>
+            <div class="stars-container" id="stars">
+                <div class="star-icon">☆</div>
+                <div class="star-icon">☆</div>
+                <div class="star-icon">☆</div>
+                <div class="star-icon">☆</div>
+                <div class="star-icon">☆</div>
+            </div>
+        </div>
+
+        <!-- Контент -->
+        <div class="content">
+            <h3 class="title" id="task-type">➕ Сложение</h3>
+            <p class="subtitle" id="task-instruction">Сколько всего фруктов?</p>
+            
+            <div class="equation-container">
+                <div class="equation" id="math-task">
+                    <span class="number">5</span>
+                    <span class="operator">+</span>
+                    <span class="number">3</span>
+                    <span class="equals">=</span>
+                    <span class="question">?</span>
+                </div>
+                
+                <div class="fruits-container" id="fruits-container">
+                    <div class="fruits-group">
+                        <div class="fruits-row" id="fruits-left"></div>
+                        <div class="fruit-count" id="count-left">5 яблок</div>
+                    </div>
+                    <div class="fruits-group" id="operator-group" style="align-self: center; font-size: 2.5rem; margin: 0 10px;">
+                        +
+                    </div>
+                    <div class="fruits-group">
+                        <div class="fruits-row" id="fruits-right"></div>
+                        <div class="fruit-count" id="count-right">3 яблока</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="answer-buttons" id="answer-buttons">
+                <!-- Кнопки будут генерироваться динамически -->
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+            
+            <button class="next-btn" id="next-btn" onclick="nextTask()" disabled>Дальше ➡️</button>
+            <div class="progress" id="progress">Задание 1 из 10</div>
+        </div>
+    </div>
+
+    <script>
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+        let currentTask = 1;
+        let correctAnswers = 0;
+        let currentProblem = {
+            a: 5,
+            b: 3,
+            operator: '+',
+            answer: 8,
+            type: 'addition',
+            fruit: '🍎' // ОДИН фрукт для всего примера
+        };
+        let totalTasks = 20;
+        let fruitsAnimationRunning = false;
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            generateTask();
+        });
+
+        // ========== ГЕНЕРАЦИЯ ЗАДАНИЯ ==========
+        function generateTask() {
+            const taskType = document.getElementById('task-type');
+            const taskInstruction = document.getElementById('task-instruction');
+            const mathTask = document.getElementById('math-task');
+            const operatorGroup = document.getElementById('operator-group');
+            
+            // Чередуем сложение и вычитание
+            const isAddition = currentTask % 2 === 1;
+            
+            let a, b, answer, operator, type, fruit;
+            
+            // Выбираем ОДИН фрукт для всего примера
+            const fruits = ['🍎', '🍌', '🍊', '🍇', '🍒', '🍓', '🥝', '🍍', '🍑', '🍉'];
+            const fruitIndex = (currentTask - 1) % fruits.length;
+            fruit = fruits[fruitIndex];
+            
+            if (isAddition) {
+                // Сложение: 2-8 + 1-5, результат <= 10
+                a = Math.floor(Math.random() * 7) + 2; // 2-8
+                b = Math.floor(Math.random() * Math.min(6, 11 - a)) + 1; // 1-5, сумма <= 10
+                answer = a + b;
+                operator = '+';
+                type = 'addition';
+                taskType.textContent = '➕ Сложение';
+                taskType.style.color = '#4CAF50';
+                taskInstruction.textContent = 'Сколько всего фруктов?';
+                operatorGroup.textContent = '+';
+                operatorGroup.className = '';
+                operatorGroup.style.color = '#ff6b6b';
+            } else {
+                // Вычитание: уменьшаемое 5-10, вычитаемое 1-5
+                a = Math.floor(Math.random() * 6) + 5; // 5-10
+                b = Math.floor(Math.random() * Math.min(5, a - 1)) + 1; // 1-5, меньше a
+                answer = a - b;
+                operator = '-';
+                type = 'subtraction';
+                taskType.textContent = '➖ Вычитание';
+                taskType.style.color = '#ff6b6b';
+                taskInstruction.textContent = 'Сколько фруктов осталось?';
+                operatorGroup.textContent = '-';
+                operatorGroup.className = 'minus';
+                operatorGroup.style.color = '#4ecdc4';
+            }
+            
+            currentProblem = { a, b, operator, answer, type, fruit };
+            
+            // Отображаем пример
+            mathTask.innerHTML = `
+                <span class="number">${a}</span>
+                <span class="operator ${operator === '-' ? 'minus' : ''}">${operator}</span>
+                <span class="number">${b}</span>
+                <span class="equals">=</span>
+                <span class="question">?</span>
+            `;
+            
+            // Отображаем фрукты (ОДИНАКОВЫЕ для обоих чисел)
+            renderFruits();
+            
+            // Генерируем кнопки ответов
+            generateAnswerButtons(answer);
+            
+            // Обновляем прогресс
+            document.getElementById('progress').textContent = `Задание ${currentTask} из ${totalTasks}`;
+            
+            // Сбрасываем фидбек
+            document.getElementById('feedback').className = 'feedback';
+        }
+
+        // ========== ОТОБРАЖЕНИЕ ФРУКТОВ ==========
+        function renderFruits() {
+            const fruitsLeft = document.getElementById('fruits-left');
+            const fruitsRight = document.getElementById('fruits-right');
+            const countLeft = document.getElementById('count-left');
+            const countRight = document.getElementById('count-right');
+            
+            // Очищаем предыдущие фрукты
+            fruitsLeft.innerHTML = '';
+            fruitsRight.innerHTML = '';
+            
+            const { a, b, type, fruit } = currentProblem;
+            
+            // Названия фруктов для подписей
+            const fruitNames = {
+                '🍎': 'яблок', '🍌': 'бананов', '🍊': 'апельсинов', 
+                '🍇': 'виноградин', '🍒': 'вишен', '🍓': 'клубники',
+                '🥝': 'киви', '🍍': 'ананасов', '🍑': 'персиков', '🍉': 'арбузов'
+            };
+            
+            const fruitName = fruitNames[fruit] || 'фруктов';
+            
+            // Рисуем фрукты слева (все одинаковые)
+            for (let i = 0; i < a; i++) {
+                const fruitEl = document.createElement('div');
+                fruitEl.className = 'fruit';
+                fruitEl.textContent = fruit;
+                fruitsLeft.appendChild(fruitEl);
+            }
+            
+            // Рисуем фрукты справа (те же самые фрукты!)
+            for (let i = 0; i < b; i++) {
+                const fruitEl = document.createElement('div');
+                fruitEl.className = 'fruit';
+                fruitEl.textContent = fruit;
+                fruitsRight.appendChild(fruitEl);
+            }
+            
+            // Обновляем подписи с правильными формами множественного числа
+            function getPlural(count, wordForms) {
+                // wordForms: [1 шт, 2-4 шт, 5+ шт]
+                const cases = [2, 0, 1, 1, 1, 2];
+                return wordForms[(count % 100 > 4 && count % 100 < 20) ? 2 : cases[Math.min(count % 10, 5)]];
+            }
+            
+            // Специальные формы для некоторых фруктов
+            const pluralForms = {
+                'яблок': ['яблоко', 'яблока', 'яблок'],
+                'бананов': ['банан', 'банана', 'бананов'],
+                'апельсинов': ['апельсин', 'апельсина', 'апельсинов'],
+                'виноградин': ['виноградина', 'виноградины', 'виноградин'],
+                'вишен': ['вишня', 'вишни', 'вишен'],
+                'клубники': ['клубника', 'клубники', 'клубники'],
+                'киви': ['киви', 'киви', 'киви'],
+                'ананасов': ['ананас', 'ананаса', 'ананасов'],
+                'персиков': ['персик', 'персика', 'персиков'],
+                'арбузов': ['арбуз', 'арбуза', 'арбузов']
+            };
+            
+            const baseForm = fruitName;
+            const forms = pluralForms[baseForm] || [baseForm, baseForm, baseForm];
+            
+            countLeft.textContent = `${a} ${getPlural(a, forms)}`;
+            countRight.textContent = `${b} ${getPlural(b, forms)}`;
+            
+            // Анимация появления фруктов
+            setTimeout(() => {
+                document.querySelectorAll('.fruit').forEach((fruitEl, index) => {
+                    setTimeout(() => {
+                        fruitEl.classList.add('animate');
+                    }, 100 + index * 50);
+                });
+            }, 100);
+        }
+
+        // ========== ГЕНЕРАЦИЯ КНОПОК ОТВЕТОВ ==========
+        function generateAnswerButtons(correctAnswer) {
+            const answerButtons = document.getElementById('answer-buttons');
+            answerButtons.innerHTML = '';
+            
+            // Создаём массив ответов: правильный + 3 неправильных
+            let wrongAnswers = [];
+            
+            // Генерируем 3 неправильных ответа в диапазоне 1-10
+            while (wrongAnswers.length < 3) {
+                let wrong = Math.floor(Math.random() * 10) + 1;
+                
+                // Для вычитания исключаем отрицательные и слишком большие числа
+                if (currentProblem.operator === '-') {
+                    if (wrong >= currentProblem.a || wrong < 0) continue;
+                }
+                
+                if (wrong !== correctAnswer && !wrongAnswers.includes(wrong)) {
+                    wrongAnswers.push(wrong);
+                }
+            }
+            
+            // Добавляем правильный ответ
+            let allAnswers = [...wrongAnswers, correctAnswer];
+            
+            // Перемешиваем
+            allAnswers.sort(() => Math.random() - 0.5);
+            
+            // Создаём кнопки
+            allAnswers.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(answer);
+                answerButtons.appendChild(btn);
+            });
+        }
+
+        // ========== ПРОВЕРКА ОТВЕТА ==========
+        function checkAnswer(selectedAnswer) {
+            if (fruitsAnimationRunning) return;
+            
+            const feedback = document.getElementById('feedback');
+            const nextBtn = document.getElementById('next-btn');
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            
+            if (selectedAnswer === currentProblem.answer) {
+                // ПРАВИЛЬНЫЙ ОТВЕТ
+                feedback.innerHTML = getRandomSuccessMessage();
+                feedback.className = 'feedback success';
+                correctAnswers++;
+                
+                // Подсвечиваем правильную кнопку
+                answerButtons.forEach(btn => {
+                    if (parseInt(btn.textContent) === selectedAnswer) {
+                        btn.classList.add('correct');
+                    }
+                    // Блокируем ВСЕ кнопки после правильного ответа
+                    btn.disabled = true;
+                });
+                
+                // Для вычитания — анимация удаления фруктов
+                if (currentProblem.type === 'subtraction') {
+                    animateSubtraction();
+                } else {
+                    // Для сложения — сразу добавляем звезду и разблокируем "Дальше"
+                    setTimeout(() => {
+                        addStar();
+                        nextBtn.disabled = false;
+                    }, 500);
+                }
+            } else {
+                // НЕПРАВИЛЬНЫЙ ОТВЕТ
+                feedback.innerHTML = getRandomErrorMessage();
+                feedback.className = 'feedback error';
+                
+                // Подсвечиваем ТОЛЬКО неправильную кнопку и блокируем её
+                answerButtons.forEach(btn => {
+                    const answerValue = parseInt(btn.textContent);
+                    if (answerValue === selectedAnswer) {
+                        btn.classList.add('wrong');
+                        btn.disabled = true; // блокируем только эту кнопку
+                    }
+                });
+                
+                // Остальные кнопки остаются активными для повторной попытки!
+                // Кнопка "Дальше" остаётся заблокированной
+            }
+        }
+
+        // ========== АНИМАЦИЯ ВЫЧИТАНИЯ ==========
+        function animateSubtraction() {
+            fruitsAnimationRunning = true;
+            const fruitsRight = document.querySelectorAll('#fruits-right .fruit');
+            
+            // Постепенно "удаляем" фрукты справа
+            fruitsRight.forEach((fruit, index) => {
+                setTimeout(() => {
+                    fruit.classList.add('removed');
+                }, index * 200);
+            });
+            
+            // После завершения анимации
+            setTimeout(() => {
+                fruitsAnimationRunning = false;
+                addStar();
+                document.getElementById('next-btn').disabled = false;
+            }, fruitsRight.length * 200 + 500);
+        }
+
+        // ========== СЛЕДУЮЩЕЕ ЗАДАНИЕ ==========
+        function nextTask() {
+            currentTask++;
+            
+            if (currentTask > totalTasks) {
+                showResults();
+                return;
+            }
+            
+            // Сбрасываем кнопку "Дальше"
+            document.getElementById('next-btn').disabled = true;
+            
+            // Генерируем новое задание
+            generateTask();
+        }
+
+        // ========== ПОКАЗ РЕЗУЛЬТАТОВ ==========
+        function showResults() {
+            const feedback = document.getElementById('feedback');
+            const nextBtn = document.getElementById('next-btn');
+            const answerButtons = document.getElementById('answer-buttons');
+            const fruitsContainer = document.getElementById('fruits-container');
+            
+            // Скрываем фрукты и кнопки
+            fruitsContainer.style.display = 'none';
+            answerButtons.innerHTML = '';
+            
+            // Показываем результаты
+            let resultMessage = `🎉 Ты решил ${totalTasks} примеров!<br><br>`;
+            resultMessage += `✅ Правильных ответов: <span style="font-size: 1.8rem; color: #ffd700">${correctAnswers}</span> из ${totalTasks}<br><br>`;
+            
+            // Оценка в зависимости от результата
+            if (correctAnswers === totalTasks) {
+                resultMessage += '🌟🌟🌟<br>ТЫ НАСТОЯЩИЙ МАТЕМАТИК!<br>ВСЁ ПРАВИЛЬНО!';
+                feedback.style.background = 'linear-gradient(to right, #ffd700, #ffa500)';
+            } else if (correctAnswers >= 8) {
+                resultMessage += '🌟🌟<br>ОТЛИЧНО!<br>Ты почти всё решил правильно!';
+                feedback.style.background = 'linear-gradient(to right, #4caf50, #8bc34a)';
+            } else if (correctAnswers >= 6) {
+                resultMessage += '🌟<br>ХОРОШО!<br>Продолжай тренироваться!';
+                feedback.style.background = 'linear-gradient(to right, #8bc34a, #cddc39)';
+            } else {
+                resultMessage += '💪<br>ТЫ МОЛОДЕЦ, ЧТО ПРОБОВАЛ!<br>Тренируйся ещё — у тебя всё получится!';
+                feedback.style.background = 'linear-gradient(to right, #ff9800, #ffc107)';
+            }
+            
+            feedback.innerHTML = resultMessage;
+            feedback.className = 'feedback success';
+            
+            // Меняем кнопку "Дальше" на "Начать заново"
+            nextBtn.textContent = 'Начать заново 🔄';
+            nextBtn.style.background = 'linear-gradient(to right, #2196F3, #21CBF3)';
+            nextBtn.onclick = resetGame;
+        }
+
+        // ========== СБРОС ИГРЫ ==========
+        function resetGame() {
+            currentTask = 1;
+            correctAnswers = 0;
+            fruitsAnimationRunning = false;
+            
+            // Показываем фрукты
+            document.getElementById('fruits-container').style.display = 'flex';
+            
+            // Сбрасываем звёзды
+            document.querySelectorAll('.star-icon').forEach(star => {
+                star.textContent = '☆';
+                star.classList.remove('filled');
+            });
+            
+            // Сбрасываем кнопку
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.textContent = 'Дальше ➡️';
+            nextBtn.style.background = 'linear-gradient(to right, #00c853, #64dd17)';
+            nextBtn.onclick = nextTask;
+            nextBtn.disabled = true;
+            
+            // Сбрасываем фидбек
+            document.getElementById('feedback').className = 'feedback';
+            
+            // Генерируем новое задание
+            generateTask();
+        }
+
+        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+        function addStar() {
+            const stars = document.getElementById('stars');
+            const emptyStars = Array.from(stars.querySelectorAll('.star-icon')).filter(star => star.textContent === '☆');
+            
+            if (emptyStars.length > 0) {
+                const star = emptyStars[0];
+                star.textContent = '★';
+                star.classList.add('filled');
+            }
+        }
+
+        function getRandomSuccessMessage() {
+            const messages = [
+                '✅ Правильно!<br>Молодец!',
+                '✅ Отлично!<br>Так держать!',
+                '✅ Верно!<br>Ты умница!',
+                '✅ Здорово!<br>Продолжай!',
+                '✅ Точно!<br>Ты математик!',
+                '✅ Ура!<br>Правильно!',
+                '✅ Молодчина!<br>Верно!'
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function getRandomErrorMessage() {
+            const messages = [
+                '❌ Почти!<br>Попробуй ещё!',
+                '❌ Не совсем...<br>Подумай!',
+                '❌ Ошибочка!<br>Но ты сможешь!',
+                '❌ Нет,<br>но не расстраивайся!',
+                '❌ Почти получилось!<br>Ещё разок!',
+                '❌ Не правильно,<br>но ты стараешься!',
+                '❌ Ой!<br>Давай снова!'
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+    </script>
+</body>
+</html>
